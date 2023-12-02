@@ -29,24 +29,9 @@ jobs:
       - name: Install sshpass
         run: sudo apt install sshpass
 
-      - name: Deploy binary
+      - name: Deploy
         env:
           PASSWORD: '${{ secrets.PASSWORD }}'
-        run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./proxysafe root@92.63.97.207:/home/rkuzin/proxysafe/releases/current/
-
-      - name: Deploy config
-        env:
-          PASSWORD: '${{ secrets.PASSWORD }}'
-        run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./config/* root@92.63.97.207:/home/rkuzin/proxysafe/releases/current/config/
-
-      - name: Deploy scripts
-        env:
-          PASSWORD: '${{ secrets.PASSWORD }}'
-        run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./deploy/* root@92.63.97.207:/home/rkuzin/proxysafe/releases/current/deploy/
-      
-      - name: Deploy migrations
-        env:
-          PASSWORD: '${{ secrets.PASSWORD }}'
-        run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./migrations/* root@92.63.97.207:/home/rkuzin/proxysafe/releases/current/migrations/
+        run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./* root@92.63.97.207:/home/rkuzin/proxysafe/releases/current/
 
       
