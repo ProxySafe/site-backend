@@ -34,4 +34,13 @@ jobs:
           PASSWORD: '${{ secrets.PASSWORD }}'
         run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./* root@92.63.97.207:/home/rkuzin/proxysafe/releases/current/
 
+      - name: Run migrations
+        env:
+          PASSWORD: '${{ secrets.PASSWORD }}'
+        run: sshpass -p $PASSWORD ssh -t root@92.63.97.207 '/home/rkuzin/proxysafe/releases/current/deploy/scripts/migrate.sh'
+
+      - name: Restart
+        env:
+          PASSWORD: '${{ secrets.PASSWORD }}'
+        run: sshpass -p $PASSWORD ssh -t root@92.63.97.207 'systemctl restart proxysafe'
       
