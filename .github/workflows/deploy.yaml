@@ -37,7 +37,7 @@ jobs:
       - name: Run migrations
         env:
           PASSWORD: '${{ secrets.PASSWORD }}'
-        run: sshpass -p $PASSWORD ssh root@92.63.97.207 '/home/rkuzin/proxysafe/releases/current/deploy/scripts/migrate.sh'
+        run: sshpass -p $PASSWORD ssh root@92.63.97.207 '/home/rkuzin/proxysafe/releases/db/migrate.sh'
 
       - name: Restart
         env:
