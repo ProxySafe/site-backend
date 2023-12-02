@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.19', '1.20', '1.21.x' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+      
+      - name: Install packages
+        run: go get ./...
+      
+      - name: Build
+        run: go build
+      
+      - name: Install sshpass
+        run: sudo apt install sshpass
+
+      - name: Deploy
+        env:
+          PASSWORD: '${{ secrets.PASSWORD }}'
+        run: sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./proxysafe root@83.220.174.247:/home/rkuzin/proxysafe/releases/current/ && 
+            sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./config/* root@83.220.174.247:/home/rkuzin/proxysafe/releases/current/config/ &&
+            sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./migrations/* root@83.220.174.247:/home/rkuzin/proxysafe/releases/current/migrations/ &&
+            sshpass -p $PASSWORD scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r ./deploy/* root@83.220.174.247:/home/rkuzin/proxysafe/releases/current/deploy/

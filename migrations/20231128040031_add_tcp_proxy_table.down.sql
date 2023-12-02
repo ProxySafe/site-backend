@@ -1,1 +1,0 @@
-drop table tcp_proxy;

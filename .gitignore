@@ -1,2 +1,3 @@
 var
 dev
+config/secrets.yaml

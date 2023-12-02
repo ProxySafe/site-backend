@@ -1,11 +1,12 @@
 version: "3"
 services:
-  mysql:
-    image: mysql:8.0.23
+  postgres:
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: proxysafe
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: proxysafe
+      PGDATA: /data/postgres
     ports:
-      - "127.0.0.1:3306:3306/tcp"
+      - "5435:5432"
     volumes:
-      - ./dev/mysql/:/var/lib/mysql
+      - ./dev/pg/:/var/lib/pg
