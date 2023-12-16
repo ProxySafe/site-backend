@@ -7,5 +7,5 @@ import (
 )
 
 type IAccountService interface {
-	FindAll(ctx context.Context) ([]entities.Account, error)
+	GetAll(ctx context.Context) ([]entities.Account, error)
 }

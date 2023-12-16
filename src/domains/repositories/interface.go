@@ -7,8 +7,8 @@ import (
 )
 
 type IAccountRepository interface {
-	GetAll(ctx context.Context) ([]entities.Account, error)
-	GetAccount(ctx context.Context, email string) (*entities.Account, error)
+	FindAll(ctx context.Context) ([]entities.Account, error)
+	FindByEmail(ctx context.Context, email string) (*entities.Account, error)
 }
 
 type ICountryProxyRepository interface {

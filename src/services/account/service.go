@@ -18,6 +18,6 @@ func NewService(repo repositories.IAccountRepository) services.IAccountService {
 	}
 }
 
-func (s *service) FindAll(ctx context.Context) ([]entities.Account, error) {
-	return s.repo.GetAll(ctx)
+func (s *service) GetAll(ctx context.Context) ([]entities.Account, error) {
+	return s.repo.FindAll(ctx)
 }

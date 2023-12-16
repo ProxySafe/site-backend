@@ -22,8 +22,8 @@ func NewAccountRepository(db db.IDBManager) IAccountRepository {
 	}
 }
 
-func (r *accountRepository) GetAll(ctx context.Context) ([]entities.Account, error) {
-	q := sqrl.Select("id, name, hashed_password").From(accountTableName)
+func (r *accountRepository) FindAll(ctx context.Context) ([]entities.Account, error) {
+	q := sqrl.Select("*").From(accountTableName)
 
 	var dest []entities.Account
 	ex := r.db.ReadDB()
@@ -33,7 +33,6 @@ func (r *accountRepository) GetAll(ctx context.Context) ([]entities.Account, err
 	return dest, nil
 }
 
-func (r *accountRepository) GetAccount(ctx context.Context, email string) (*entities.Account, error) {
-
+func (r *accountRepository) FindByEmail(ctx context.Context, email string) (*entities.Account, error) {
 	return nil, nil
 }

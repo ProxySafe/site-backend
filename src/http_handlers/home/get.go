@@ -25,7 +25,7 @@ func newHomeHandler(accountService services.IAccountService) web.IHandler {
 func (h *homeHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	accounts, err := h.accountService.FindAll(r.Context())
+	accounts, err := h.accountService.GetAll(r.Context())
 	if err != nil {
 		log.Fatal(err)
 	}
