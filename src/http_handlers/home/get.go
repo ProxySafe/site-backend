@@ -1,7 +1,6 @@
 package home
 
 import (
-	"context"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -11,15 +10,13 @@ import (
 )
 
 type homeHandler struct {
-	ctx    context.Context
 	method string
 
 	accountService services.IAccountService
 }
 
-func newHomeHandler(ctx context.Context, accountService services.IAccountService) web.IHandler {
+func newHomeHandler(accountService services.IAccountService) web.IHandler {
 	return &homeHandler{
-		ctx:            ctx,
 		method:         http.MethodGet,
 		accountService: accountService,
 	}
@@ -28,13 +25,10 @@ func newHomeHandler(ctx context.Context, accountService services.IAccountService
 func (h *homeHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	accounts, err := h.accountService.FindAll(h.ctx)
+	accounts, err := h.accountService.FindAll(r.Context())
 	if err != nil {
 		log.Fatal(err)
 	}
-	// resp := &responses.HomeResponseDTO{
-	// 	UserId: uuid.NewString(),
-	// }
 	json.NewEncoder(w).Encode(accounts[0])
 }
 

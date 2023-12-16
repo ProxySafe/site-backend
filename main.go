@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"os"
 
 	"github.com/ProxySafe/site-backend/src/app"
@@ -39,10 +38,9 @@ func getConfig(params *Params) *config.Config {
 }
 
 func main() {
-	ctx := context.Background()
 	p := getParams()
 	c := getConfig(p)
 	a := app.NewApp(c)
-	a.Init(ctx)
+	a.Init()
 	a.Run(p.WebServerPort)
 }

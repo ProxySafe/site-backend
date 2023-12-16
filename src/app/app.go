@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	"net/http"
 	"strconv"
 
@@ -35,18 +34,18 @@ func (a *App) initWebServer(httpHandlers []web.IHandler) {
 	}
 }
 
-func (a *App) initHttpHandlers(ctx context.Context) []web.IHandler {
+func (a *App) initHttpHandlers() []web.IHandler {
 	var handlers []web.IHandler
 
-	handlers = append(handlers, home.NewHandlers(ctx, a.services.AccountService)...)
+	handlers = append(handlers, home.NewHandlers(a.services.AccountService)...)
 	return handlers
 }
 
-func (a *App) Init(ctx context.Context) {
+func (a *App) Init() {
 	a.resources = resources.NewResources(a.cfg)
 	a.repositories = repositories.NewRepositories(a.resources)
 	a.services = services.NewServices(a.resources, a.repositories)
-	a.initWebServer(a.initHttpHandlers(ctx))
+	a.initWebServer(a.initHttpHandlers())
 }
 
 func (a *App) Run(port int) {
