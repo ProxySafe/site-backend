@@ -1,9 +1,14 @@
 package home
 
-import "github.com/ProxySafe/site-backend/src/modules/web"
+import (
+	"context"
 
-func NewHandlers() []web.IHandler {
+	"github.com/ProxySafe/site-backend/src/modules/web"
+	"github.com/ProxySafe/site-backend/src/services"
+)
+
+func NewHandlers(ctx context.Context, accountService services.IAccountService) []web.IHandler {
 	return []web.IHandler{
-		newHomeHandler(),
+		newHomeHandler(ctx, accountService),
 	}
 }

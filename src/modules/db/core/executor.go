@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 
+	_ "github.com/lib/pq"
+
 	"github.com/ProxySafe/site-backend/src/modules/db"
 	"github.com/blockloop/scan/v2"
 	"github.com/jmoiron/sqlx"
@@ -39,7 +41,7 @@ func (e *executor) Run(
 		return err
 	}
 
-	return scan.RowsStrict(dest, rows)
+	return scan.Rows(dest, rows)
 }
 
 func (e *executor) Exec(ctx context.Context, query db.IToSQL) (sql.Result, error) {

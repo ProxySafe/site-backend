@@ -2,6 +2,6 @@
 db:
   base:
     pg_read_nodes:
-      - postgres:example@tcp(127.0.0.1:5435)/proxysafe # local
+      - postgres://postgres:example@localhost:5435/proxysafe?sslmode=disable # local
     pg_write_nodes:
-      - postgres:example@tcp(127.0.0.1:5435)/proxysafe # local
+      - postgres://postgres:example@localhost:5435/proxysafe?sslmode=disable # local
