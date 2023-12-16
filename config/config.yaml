@@ -1,0 +1,7 @@
+# local
+db:
+  base:
+    pg_read_nodes:
+      - postgres://postgres:example@localhost:5435/proxysafe?sslmode=disable # local
+    pg_write_nodes:
+      - postgres://postgres:example@localhost:5435/proxysafe?sslmode=disable # local

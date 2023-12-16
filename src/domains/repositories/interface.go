@@ -7,6 +7,7 @@ import (
 )
 
 type IAccountRepository interface {
+	GetAll(ctx context.Context) ([]entities.Account, error)
 	GetAccount(ctx context.Context, email string) (*entities.Account, error)
 }
 
