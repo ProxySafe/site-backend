@@ -1,15 +1,46 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"os"
+
+	"github.com/ProxySafe/site-backend/src/app"
+	"github.com/ProxySafe/site-backend/src/app/config"
+	"github.com/cosiner/flag"
+	"gopkg.in/yaml.v2"
 )
 
-func main() {
-	// entrypoint
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "hello, world!!!!")
-	})
+type Params struct {
+	ConfigFile    string `names:"--config_dir, -c" usage:"configuration directory" default:"./config/config.yaml"`
+	LogsDir       string `names:"--logs_dir, -l" usage:"log directory" default:"./var/log/"`
+	WebServerPort int    `names:"--web_server_port, -wp" usage:"port if you need to run web server"`
+}
 
-	http.ListenAndServe(":8003", nil)
+func getParams() *Params {
+	params := &Params{}
+	err := flag.Commandline.ParseStruct(params)
+	if err != nil {
+		panic(err)
+	}
+	return params
+}
+
+func getConfig(params *Params) *config.Config {
+	content, err := os.ReadFile(params.ConfigFile)
+	if err != nil {
+		panic(err)
+	}
+
+	c := &config.Config{}
+	if err := yaml.Unmarshal(content, c); err != nil {
+		panic(err)
+	}
+	return c
+}
+
+func main() {
+	p := getParams()
+	c := getConfig(p)
+	a := app.NewApp(c)
+	a.Init()
+	a.Run(p.WebServerPort)
 }
