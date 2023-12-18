@@ -21,3 +21,7 @@ func NewService(repo repositories.IAccountRepository) services.IAccountService {
 func (s *service) GetAll(ctx context.Context) ([]entities.Account, error) {
 	return s.repo.FindAll(ctx)
 }
+
+func (s *service) GetByUsername(ctx context.Context, userName string) (*entities.Account, error) {
+	return s.repo.FindByUsername(ctx, userName)
+}

@@ -8,4 +8,8 @@ import (
 
 type IAccountService interface {
 	GetAll(ctx context.Context) ([]entities.Account, error)
+	GetByUsername(ctx context.Context, userName string) (*entities.Account, error)
+}
+
+type IAuthService interface {
 }

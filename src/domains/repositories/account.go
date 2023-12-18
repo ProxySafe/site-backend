@@ -34,5 +34,23 @@ func (r *accountRepository) FindAll(ctx context.Context) ([]entities.Account, er
 }
 
 func (r *accountRepository) FindByEmail(ctx context.Context, email string) (*entities.Account, error) {
-	return nil, nil
+	q := sqrl.Select("*").From(accountTableName).Where(sqrl.Eq{"email": email})
+
+	dest := &entities.Account{}
+	ex := r.db.ReadDB()
+	if err := ex.Run(ctx, dest, q); err != nil {
+		return nil, err
+	}
+	return dest, nil
+}
+
+func (r *accountRepository) FindByUsername(ctx context.Context, userName string) (*entities.Account, error) {
+	q := sqrl.Select("*").From(accountTableName).Where(sqrl.Eq{"name": userName})
+
+	dest := &entities.Account{}
+	ex := r.db.ReadDB()
+	if err := ex.Run(ctx, dest, q); err != nil {
+		return nil, err
+	}
+	return dest, nil
 }
