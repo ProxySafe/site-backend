@@ -10,6 +10,7 @@ type IAccountRepository interface {
 	FindAll(ctx context.Context) ([]entities.Account, error)
 	FindByEmail(ctx context.Context, email string) (*entities.Account, error)
 	FindByUsername(ctx context.Context, accountName string) (*entities.Account, error)
+	Add(ctx context.Context, account *entities.Account) error
 }
 
 type ICountryProxyRepository interface {
@@ -36,4 +37,9 @@ type IProxyRepository interface {
 
 type ITCpProxyRepository interface {
 	FindByProxy(ctx context.Context, proxyId int64) ([]entities.TCpProxy, error)
+}
+
+type IRefreshTokenRepository interface {
+	Add(ctx context.Context, refreshToken *entities.RefreshToken) error
+	FindByAccountId(ctx context.Context, accountId int64) (*entities.RefreshToken, error)
 }

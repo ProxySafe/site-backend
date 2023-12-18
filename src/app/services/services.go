@@ -16,6 +16,6 @@ type Services struct {
 func NewServices(res *resources.Resources, repos *repositories.Repositories) *Services {
 	return &Services{
 		AccountService: account.NewService(repos.AccountRepository),
-		AuthService:    auth.NewService(),
+		AuthService:    auth.NewService(res.SigningKey, res.TokenTTL, repos.RefreshTokenRepository),
 	}
 }

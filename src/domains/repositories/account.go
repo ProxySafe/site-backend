@@ -54,3 +54,13 @@ func (r *accountRepository) FindByUsername(ctx context.Context, userName string)
 	}
 	return dest, nil
 }
+
+func (r *accountRepository) Add(ctx context.Context, account *entities.Account) error {
+	q := sqrl.Insert(accountTableName).SetMap(account.GetFieldsMap())
+
+	ex := r.db.ReadDB()
+	if _, err := ex.Exec(ctx, q); err != nil {
+		return err
+	}
+	return nil
+}

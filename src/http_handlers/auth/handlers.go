@@ -1,4 +1,4 @@
-package login
+package auth
 
 import (
 	"github.com/ProxySafe/site-backend/src/modules/web"
@@ -11,6 +11,6 @@ const (
 
 func NewHandlers(accountService services.IAccountService, authService services.IAuthService) []web.IHandler {
 	return []web.IHandler{
-		newPostHandler(accountService, authService),
+		newLoginHandler(accountService, authService),
 	}
 }
