@@ -10,11 +10,16 @@ import (
 )
 
 type Resources struct {
-	DBManager db.IDBManager
+	DBManager  db.IDBManager
+	SigningKey string
+	TokenTTL   int64
 }
 
 func NewResources(cfg *config.Config) *Resources {
-	r := &Resources{}
+	r := &Resources{
+		SigningKey: cfg.SigningKey,
+		TokenTTL:   cfg.TokenTTL,
+	}
 	r.initDBManager(cfg)
 	return r
 }
