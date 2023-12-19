@@ -9,11 +9,14 @@ type Fingerprint struct {
 }
 
 type RefreshToken struct {
-	Fingerprint
-	Id        int64     `db:"id" json:"id"`
-	AccountId int64     `db:"account_id" json:"account_id"`
-	Expires   time.Time `db:"expires" json:"expires"`
-	Token     string    `db:"token" json:"token"`
+	// TODO: avoid duplicated code
+	Fingerprint int64     `db:"fingerprint" json:"fingerprint"`
+	Os          string    `db:"os" json:"os"`
+	UserAgent   string    `db:"user_agent" json:"user_agent"`
+	Id          int64     `db:"id" json:"id"`
+	AccountId   int64     `db:"account_id" json:"account_id"`
+	Expires     time.Time `db:"expires" json:"expires"`
+	Token       string    `db:"token" json:"token"`
 }
 
 func (r *RefreshToken) GetFieldsMap() map[string]interface{} {

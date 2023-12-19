@@ -32,5 +32,6 @@ func (a *Account) GetFieldsMap() map[string]interface{} {
 		"hashed_password": a.HashedPassword,
 		"email":           a.Email,
 		"enabled":         a.Enabled,
+		"created_at":      a.CreatedAt,
 	}
 }

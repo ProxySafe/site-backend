@@ -9,7 +9,7 @@ import (
 type IAccountService interface {
 	GetAll(ctx context.Context) ([]entities.Account, error)
 	GetByUsername(ctx context.Context, userName string) (*entities.Account, error)
-	CreateAccount(ctx context.Context, userName, email, hashedPassword string, telephone *string) (*entities.Account, error)
+	CreateAccount(ctx context.Context, userName, email, password string, telephone *string) (*entities.Account, error)
 }
 
 type IAuthService interface {

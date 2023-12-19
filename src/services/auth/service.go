@@ -24,6 +24,7 @@ func NewService(
 ) services.IAuthService {
 	return &service{
 		signingKey: signingKey,
+		repo:       repo,
 	}
 }
 
@@ -48,7 +49,9 @@ func (s *service) GenerateRefreshToken(
 		Token:       token,
 		AccountId:   accountId,
 		Expires:     time.Now().Add(time.Hour * 40),
-		Fingerprint: fingerprint,
+		Fingerprint: fingerprint.Fingerprint,
+		Os:          fingerprint.Os,
+		UserAgent:   fingerprint.UserAgent,
 	}
 
 	if err := s.repo.Add(ctx, refreshToken); err != nil {

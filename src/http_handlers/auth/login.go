@@ -32,19 +32,23 @@ type loginResponseDto struct {
 }
 
 func (l *loginResponseDto) setError(err error, statusCode int) {
-	l.Message = err.Error()
+	if err != nil {
+		l.Message = err.Error()
+	}
 	l.StatusCode = statusCode
 }
 
 func newLoginHandler(accountService services.IAccountService, authService services.IAuthService) web.IHandler {
 	return &loginHandler{
 		accountService: accountService,
+		authService:    authService,
 	}
 }
 
 func (h *loginHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	requestDto := &loginRequestDto{}
 	responseDto := &loginResponseDto{}
+	w.Header().Set("Content-Type", "application/json")
 	defer func() {
 		json.NewEncoder(w).Encode(responseDto)
 	}()

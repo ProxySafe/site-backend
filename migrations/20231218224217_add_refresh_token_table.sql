@@ -1,3 +1,4 @@
+-- Active: 1691754991722@@127.0.0.1@5435@proxysafe
 -- +goose Up
 CREATE TABLE refresh_token (
     id SERIAL NOT NULL,

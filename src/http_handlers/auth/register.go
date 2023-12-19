@@ -25,7 +25,7 @@ type registerHandlerRequestDto struct {
 	Telephone   *string `json:"telephone"`
 }
 
-func newHandlers(accountService services.IAccountService) web.IHandler {
+func newRegisterHandler(accountService services.IAccountService) web.IHandler {
 	return &registerHandler{
 		accountService: accountService,
 	}
@@ -41,8 +41,8 @@ func (h *registerHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	account, err := h.accountService.CreateAccount(
 		r.Context(),
 		req.AccountName,
-		req.Password,
 		req.Email,
+		req.Password,
 		req.Telephone,
 	)
 	if err != nil {

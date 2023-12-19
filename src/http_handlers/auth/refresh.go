@@ -12,6 +12,11 @@ type refreshHandler struct {
 	authService    services.IAuthService
 }
 
+type refreshRequestDto struct {
+}
+
+type refreshResponseDto struct{}
+
 func newRefreshHandler(accountService services.IAccountService, authService services.IAuthService) web.IHandler {
 	return &refreshHandler{
 		accountService: accountService,

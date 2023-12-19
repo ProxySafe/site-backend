@@ -23,7 +23,9 @@ func NewRefreshTokenRepository(db db.IDBManager) IRefreshTokenRepository {
 }
 
 func (r *refreshTokenRepository) Add(ctx context.Context, token *entities.RefreshToken) error {
-	q := sqrl.Insert(refreshTokenTableName).SetMap(token.GetFieldsMap())
+	q := sqrl.Insert(refreshTokenTableName).
+		SetMap(token.GetFieldsMap()).
+		PlaceholderFormat(sqrl.Dollar)
 
 	ex := r.db.WriteDB()
 	if _, err := ex.Exec(ctx, q); err != nil {
@@ -38,7 +40,7 @@ func (r *refreshTokenRepository) FindByAccountId(
 	accountId int64,
 ) (*entities.RefreshToken, error) {
 	q := sqrl.Select("*").From(refreshTokenTableName).
-		Where(sqrl.Eq{"account_id": accountId})
+		Where(sqrl.Eq{"account_id": accountId}).PlaceholderFormat(sqrl.Dollar)
 
 	dest := &entities.RefreshToken{}
 	ex := r.db.ReadDB()

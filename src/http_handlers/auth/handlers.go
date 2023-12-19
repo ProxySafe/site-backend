@@ -12,5 +12,7 @@ const (
 func NewHandlers(accountService services.IAccountService, authService services.IAuthService) []web.IHandler {
 	return []web.IHandler{
 		newLoginHandler(accountService, authService),
+		newRefreshHandler(accountService, authService),
+		newRegisterHandler(accountService),
 	}
 }
