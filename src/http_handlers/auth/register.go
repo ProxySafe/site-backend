@@ -25,6 +25,18 @@ type registerHandlerRequestDto struct {
 	Telephone   *string `json:"telephone"`
 }
 
+type registerResponseDto struct {
+	Message string `json:"message"`
+	Status  int    `json:"status"`
+}
+
+func (r *registerResponseDto) setError(err error, status int) {
+	if err != nil {
+		r.Message = err.Error()
+	}
+	r.Status = status
+}
+
 func newRegisterHandler(accountService services.IAccountService) web.IHandler {
 	return &registerHandler{
 		accountService: accountService,
@@ -33,8 +45,15 @@ func newRegisterHandler(accountService services.IAccountService) web.IHandler {
 
 func (h *registerHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	req := &registerHandlerRequestDto{}
+	resp := &registerResponseDto{}
+
+	defer func() {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(resp)
+	}()
+
 	if err := utils.SetRequestDto(r, req); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		resp.setError(err, http.StatusBadRequest)
 		return
 	}
 
@@ -46,7 +65,7 @@ func (h *registerHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		req.Telephone,
 	)
 	if err != nil {
-		w.WriteHeader(http.StatusConflict)
+		resp.setError(err, http.StatusBadGateway)
 		return
 	}
 
