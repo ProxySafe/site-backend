@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ProxySafe/site-backend/src/domains/entities"
+	"github.com/ProxySafe/site-backend/src/http_handlers/common"
 	"github.com/ProxySafe/site-backend/src/modules/web"
 	"github.com/ProxySafe/site-backend/src/services"
 	"github.com/ProxySafe/site-backend/src/utils"
@@ -46,6 +47,7 @@ func (h *refreshHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	resp := &refreshResponseDto{}
 
 	defer func() {
+		common.EnableCors(w)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(resp)
 	}()
