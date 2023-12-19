@@ -16,8 +16,7 @@ type logoutHandler struct {
 
 type logoutRequestDto struct {
 	// TODO: fingerprint?
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken string `json:"access_token"`
 }
 
 type logoutResponseDto struct {
