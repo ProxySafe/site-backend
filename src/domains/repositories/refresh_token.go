@@ -75,7 +75,20 @@ func (r *refreshTokenRepository) FindByUsername(
 func (r *refreshTokenRepository) Remove(ctx context.Context, refreshToken *entities.RefreshToken) error {
 	q := sqrl.Delete("*").
 		From(refreshTokenTableName).
-		Where(sqrl.Eq{"account_id": refreshToken.AccountId})
+		Where(sqrl.Eq{"account_id": refreshToken.AccountId}).PlaceholderFormat(sqrl.Dollar)
+
+	ex := r.db.WriteDB()
+	if _, err := ex.Exec(ctx, q); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *refreshTokenRepository) RemoveByUsername(ctx context.Context, username string) error {
+	q := sqrl.Delete().
+		From(refreshTokenTableName + " USING " + refreshTokenTableName + " AS r").
+		LeftJoin(accountTableName + " a ON a.id = r.account_id").
+		Where(sqrl.Eq{"a.name": username}).PlaceholderFormat(sqrl.Dollar)
 
 	ex := r.db.WriteDB()
 	if _, err := ex.Exec(ctx, q); err != nil {

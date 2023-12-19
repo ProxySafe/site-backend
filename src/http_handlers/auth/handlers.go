@@ -14,5 +14,6 @@ func NewHandlers(accountService services.IAccountService, authService services.I
 		newLoginHandler(accountService, authService),
 		newRefreshHandler(authService),
 		newRegisterHandler(accountService),
+		newLogoutHandler(authService),
 	}
 }

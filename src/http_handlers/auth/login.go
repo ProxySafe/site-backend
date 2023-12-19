@@ -30,6 +30,7 @@ type loginResponseDto struct {
 	RefreshToken string `json:"refresh_token"`
 	Message      string `json:"message"`
 	StatusCode   int    `json:"statusCode"`
+	AccountId    int    `json:"account_id"`
 }
 
 func (l *loginResponseDto) setError(err error, statusCode int) {
@@ -99,6 +100,7 @@ func (h *loginHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	responseDto.AccessToken = accessToken
 	responseDto.RefreshToken = refreshToken
+	responseDto.AccountId = account.Id
 	responseDto.setError(nil, http.StatusOK)
 }
 

@@ -44,4 +44,5 @@ type IRefreshTokenRepository interface {
 	FindByAccountId(ctx context.Context, accountId int64) (*entities.RefreshToken, error)
 	FindByUsername(ctx context.Context, username string) (*entities.RefreshToken, error)
 	Remove(ctx context.Context, refreshToken *entities.RefreshToken) error
+	RemoveByUsername(ctx context.Context, username string) error
 }

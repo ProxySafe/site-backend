@@ -122,3 +122,12 @@ func (s *service) ParseToken(ctx context.Context, accessToken string) (string, b
 
 	return claims["sub"].(string), claims.VerifyExpiresAt(time.Now().Unix(), true), nil
 }
+
+func (s *service) RemoveRefreshToken(ctx context.Context, accessToken string) error {
+	username, _, _ := s.ParseToken(ctx, accessToken)
+	if username == "" {
+		// TODO: make custom type for error
+		return fmt.Errorf("invalid access token")
+	}
+	return s.repo.RemoveByUsername(ctx, username)
+}
