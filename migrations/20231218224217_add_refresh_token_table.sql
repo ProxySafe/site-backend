@@ -15,6 +15,6 @@ ALTER TABLE refresh_token ADD CONSTRAINT refresh_token_uniq_account_id UNIQUE (a
 
 -- +goose Down
 -- +goose StatementBegin
-ALTER TABLE account DROP CONSTRAINT refresh_token_uniq_account_id;
+ALTER TABLE refresh_token DROP CONSTRAINT refresh_token_uniq_account_id;
 DROP TABLE refresh_token;
 -- +goose StatementEnd
