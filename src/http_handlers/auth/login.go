@@ -48,8 +48,9 @@ func newLoginHandler(accountService services.IAccountService, authService servic
 func (h *loginHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	requestDto := &loginRequestDto{}
 	responseDto := &loginResponseDto{}
-	w.Header().Set("Content-Type", "application/json")
+
 	defer func() {
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(responseDto)
 	}()
 

@@ -42,4 +42,6 @@ type ITCpProxyRepository interface {
 type IRefreshTokenRepository interface {
 	Add(ctx context.Context, refreshToken *entities.RefreshToken) error
 	FindByAccountId(ctx context.Context, accountId int64) (*entities.RefreshToken, error)
+	FindByUsername(ctx context.Context, username string) (*entities.RefreshToken, error)
+	Remove(ctx context.Context, refreshToken *entities.RefreshToken) error
 }

@@ -19,6 +19,13 @@ type IAuthService interface {
 		accountId int64,
 		fingerprint entities.Fingerprint,
 	) (string, error)
+	ParseToken(ctx context.Context, accessToken string) (string, bool, error)
+	RefreshAccessToken(
+		ctx context.Context,
+		oldAccessToken,
+		refreshToken string,
+		fingerprint entities.Fingerprint,
+	) (string, error)
 }
 
 type IEmailService interface {

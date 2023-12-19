@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/ProxySafe/site-backend/src/domains/entities"
 	"github.com/ProxySafe/site-backend/src/modules/db"
@@ -49,4 +50,36 @@ func (r *refreshTokenRepository) FindByAccountId(
 	}
 
 	return dest, nil
+}
+
+func (r *refreshTokenRepository) FindByUsername(
+	ctx context.Context,
+	username string,
+) (*entities.RefreshToken, error) {
+	q := sqrl.Select("*").From(refreshTokenTableName + " r").
+		LeftJoin(accountTableName + " a ON a.id = r.account_id").
+		Where(sqrl.Eq{"a.name": username}).PlaceholderFormat(sqrl.Dollar)
+
+	var dest []entities.RefreshToken
+	ex := r.db.ReadDB()
+	if err := ex.Run(ctx, &dest, q); err != nil {
+		return nil, err
+	}
+
+	if len(dest) == 0 {
+		return nil, sql.ErrNoRows
+	}
+	return &dest[0], nil
+}
+
+func (r *refreshTokenRepository) Remove(ctx context.Context, refreshToken *entities.RefreshToken) error {
+	q := sqrl.Delete("*").
+		From(refreshTokenTableName).
+		Where(sqrl.Eq{"account_id": refreshToken.AccountId})
+
+	ex := r.db.WriteDB()
+	if _, err := ex.Exec(ctx, q); err != nil {
+		return err
+	}
+	return nil
 }

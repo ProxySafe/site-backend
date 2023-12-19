@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/ProxySafe/site-backend/src/domains/entities"
@@ -59,4 +60,65 @@ func (s *service) GenerateRefreshToken(
 	}
 
 	return token, nil
+}
+
+func (s *service) RefreshAccessToken(
+	ctx context.Context,
+	oldAccessToken,
+	refreshToken string,
+	fingerprint entities.Fingerprint,
+) (string, error) {
+	username, _, _ := s.ParseToken(ctx, oldAccessToken)
+	if username == "" {
+		return "", fmt.Errorf("invalid old access token")
+	}
+
+	refreshTokenStruct, err := s.repo.FindByUsername(ctx, username)
+	if err != nil {
+		return "", err
+	}
+
+	if refreshTokenStruct.Fingerprint != fingerprint.Fingerprint ||
+		refreshTokenStruct.Os != fingerprint.Os || refreshTokenStruct.UserAgent != fingerprint.UserAgent {
+		// TODO: make type for error
+		return "", fmt.Errorf("incorrect fingerprint")
+	}
+
+	if refreshTokenStruct.Token != refreshToken {
+		// TODO: make type for error
+		return "", fmt.Errorf("invalid refresh token")
+	}
+
+	if refreshTokenStruct.Expires.Before(time.Now()) {
+		// TODO: make type for error
+		return "", fmt.Errorf("refresh token has expired")
+	}
+
+	return s.GenerateAccessToken(ctx, username)
+}
+
+func (s *service) ParseToken(ctx context.Context, accessToken string) (string, bool, error) {
+	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (i interface{}, err error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(s.signingKey), nil
+	})
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", false, fmt.Errorf("error get user claims from token")
+	}
+
+	username := claims["sub"].(string)
+	if err != nil {
+		return username, false, err
+	}
+
+	if !token.Valid {
+		return username, false, fmt.Errorf("invalid access token")
+	}
+
+	return claims["sub"].(string), claims.VerifyExpiresAt(time.Now().Unix(), true), nil
 }

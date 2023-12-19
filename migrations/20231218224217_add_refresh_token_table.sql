@@ -1,5 +1,5 @@
--- Active: 1691754991722@@127.0.0.1@5435@proxysafe
 -- +goose Up
+-- +goose StatementBegin
 CREATE TABLE refresh_token (
     id SERIAL NOT NULL,
     account_id INT NOT NULL,
@@ -10,6 +10,11 @@ CREATE TABLE refresh_token (
     os VARCHAR(20) NOT NULL,
     PRIMARY KEY(id)
 );
+ALTER TABLE refresh_token ADD CONSTRAINT refresh_token_uniq_account_id UNIQUE (account_id);
+-- +goose StatementEnd
 
 -- +goose Down
+-- +goose StatementBegin
+ALTER TABLE account DROP CONSTRAINT refresh_token_uniq_account_id;
 DROP TABLE refresh_token;
+-- +goose StatementEnd
