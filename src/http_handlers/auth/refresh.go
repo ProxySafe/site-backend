@@ -75,7 +75,7 @@ func (h *refreshHandler) Handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *refreshHandler) GetMethod() string {
-	return http.MethodGet
+	return http.MethodPost
 }
 
 func (h *refreshHandler) GetPath() string {

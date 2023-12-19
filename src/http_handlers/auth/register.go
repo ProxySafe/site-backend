@@ -73,7 +73,7 @@ func (h *registerHandler) Handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *registerHandler) GetMethod() string {
-	return http.MethodGet
+	return http.MethodPost
 }
 
 func (h *registerHandler) GetPath() string {
