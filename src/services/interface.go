@@ -26,7 +26,7 @@ type IAuthService interface {
 		refreshToken string,
 		fingerprint entities.Fingerprint,
 	) (string, error)
-	RemoveRefreshToken(ctx context.Context, accessToken string) error
+	RemoveRefreshToken(ctx context.Context, accessToken string, fp *entities.Fingerprint) error
 }
 
 type IEmailService interface {

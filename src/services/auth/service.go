@@ -123,11 +123,26 @@ func (s *service) ParseToken(ctx context.Context, accessToken string) (string, b
 	return claims["sub"].(string), claims.VerifyExpiresAt(time.Now().Unix(), true), nil
 }
 
-func (s *service) RemoveRefreshToken(ctx context.Context, accessToken string) error {
+func (s *service) RemoveRefreshToken(
+	ctx context.Context,
+	accessToken string,
+	fp *entities.Fingerprint,
+) error {
 	username, _, _ := s.ParseToken(ctx, accessToken)
 	if username == "" {
 		// TODO: make custom type for error
 		return fmt.Errorf("invalid access token")
 	}
-	return s.repo.RemoveByUsername(ctx, username)
+
+	refreshToken, err := s.repo.FindByUsername(ctx, username)
+	if err != nil {
+		return err
+	}
+
+	if refreshToken.Fingerprint != fp.Fingerprint ||
+		refreshToken.Os != fp.Os || refreshToken.UserAgent != fp.UserAgent {
+		// TODO: make custom error
+		return fmt.Errorf("cannot delete refresh token")
+	}
+	return s.repo.Remove(ctx, refreshToken)
 }
