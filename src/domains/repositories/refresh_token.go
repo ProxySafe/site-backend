@@ -73,8 +73,7 @@ func (r *refreshTokenRepository) FindByUsername(
 }
 
 func (r *refreshTokenRepository) Remove(ctx context.Context, refreshToken *entities.RefreshToken) error {
-	q := sqrl.Delete().
-		From(refreshTokenTableName).
+	q := sqrl.Delete(refreshTokenTableName).
 		Where(sqrl.Eq{"account_id": refreshToken.AccountId}).PlaceholderFormat(sqrl.Dollar)
 
 	ex := r.db.WriteDB()
