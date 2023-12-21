@@ -24,16 +24,8 @@ type refreshRequestDto struct {
 }
 
 type refreshResponseDto struct {
-	Message     string `json:"message"`
-	Status      int    `json:"status"`
+	common.StandardResponse
 	AccessToken string `json:"accessToken"`
-}
-
-func (r *refreshResponseDto) setError(err error, status int) {
-	if err != nil {
-		r.Message = err.Error()
-	}
-	r.Status = status
 }
 
 func newRefreshHandler(authService services.IAuthService) web.IHandler {
@@ -53,7 +45,7 @@ func (h *refreshHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	if err := utils.SetRequestDto(r, req); err != nil {
-		resp.setError(err, http.StatusBadRequest)
+		resp.SetError(err, http.StatusBadRequest)
 		return
 	}
 
@@ -68,11 +60,11 @@ func (h *refreshHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		},
 	)
 	if err != nil {
-		resp.setError(err, http.StatusForbidden)
+		resp.SetError(err, http.StatusUnauthorized)
 		return
 	}
 
-	resp.setError(nil, http.StatusOK)
+	resp.SetError(nil, http.StatusOK)
 	resp.AccessToken = newAccessToken
 }
 
