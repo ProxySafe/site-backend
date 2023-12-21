@@ -22,7 +22,9 @@ type IMessageRepository interface {
 }
 
 type IOrderRepository interface {
+	FindAll(ctx context.Context) ([]entities.Order, error)
 	FindByAccountId(ctx context.Context, accountId int64) ([]entities.Order, error)
+	Add(ctx context.Context, order *entities.Order) (int64, error)
 }
 
 type IProtocolProxyRepository interface {
@@ -31,8 +33,9 @@ type IProtocolProxyRepository interface {
 
 type IProxyRepository interface {
 	FindAll(ctx context.Context) ([]entities.Proxy, error)
-	FindByProvider(ctx context.Context, providerName string) ([]entities.Proxy, error)
 	FindByAccountId(ctx context.Context, accountId int64) ([]entities.Proxy, error)
+	FindNoBusy(ctx context.Context) ([]entities.Proxy, error)
+	SetToOrder(ctx context.Context, orderId int, proxies []entities.Proxy) error
 }
 
 type ITCpProxyRepository interface {

@@ -10,10 +10,6 @@ import (
 	"github.com/ProxySafe/site-backend/src/utils"
 )
 
-const (
-	maxRequestBodyLength = 1000000
-)
-
 type registerHandler struct {
 	accountService services.IAccountService
 	emailService   services.IEmailService
@@ -27,15 +23,7 @@ type registerHandlerRequestDto struct {
 }
 
 type registerResponseDto struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-}
-
-func (r *registerResponseDto) setError(err error, status int) {
-	if err != nil {
-		r.Message = err.Error()
-	}
-	r.Status = status
+	common.StandardResponse
 }
 
 func newRegisterHandler(accountService services.IAccountService) web.IHandler {
@@ -55,11 +43,11 @@ func (h *registerHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	if err := utils.SetRequestDto(r, req); err != nil {
-		resp.setError(err, http.StatusBadRequest)
+		resp.SetError(err, http.StatusBadRequest)
 		return
 	}
 
-	account, err := h.accountService.CreateAccount(
+	_, err := h.accountService.CreateAccount(
 		r.Context(),
 		req.AccountName,
 		req.Email,
@@ -67,11 +55,9 @@ func (h *registerHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		req.Telephone,
 	)
 	if err != nil {
-		resp.setError(err, http.StatusBadGateway)
+		resp.SetError(err, http.StatusBadGateway)
 		return
 	}
-
-	json.NewEncoder(w).Encode(account)
 }
 
 func (h *registerHandler) GetMethod() string {
