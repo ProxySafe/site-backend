@@ -29,5 +29,19 @@ type IAuthService interface {
 	RemoveRefreshToken(ctx context.Context, accessToken string, fp *entities.Fingerprint) error
 }
 
+type IProxyService interface {
+	GetAll(ctx context.Context) ([]entities.Proxy, error)
+	GetByAccount(ctx context.Context, accountId int64) ([]entities.Proxy, error)
+	GetNoBusy(ctx context.Context) ([]entities.Proxy, error)
+	GetProxiesByAmount(ctx context.Context, amount int) ([]entities.Proxy, error)
+}
+
+type IOrderService interface {
+	GetAll(ctx context.Context) ([]entities.Order, error)
+	GetByAccount(ctx context.Context, accountId int64) ([]entities.Order, error)
+	CreateOrderByProxies(ctx context.Context, period, accountId int, proxies []entities.Proxy) error
+}
+
+// TODO: for 2-factor authorization
 type IEmailService interface {
 }

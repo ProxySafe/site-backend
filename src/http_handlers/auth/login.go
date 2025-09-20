@@ -26,18 +26,10 @@ type loginRequestDto struct {
 }
 
 type loginResponseDto struct {
+	common.StandardResponse
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
-	Message      string `json:"message"`
-	StatusCode   int    `json:"statusCode"`
 	AccountId    int    `json:"account_id"`
-}
-
-func (l *loginResponseDto) setError(err error, statusCode int) {
-	if err != nil {
-		l.Message = err.Error()
-	}
-	l.StatusCode = statusCode
 }
 
 func newLoginHandler(accountService services.IAccountService, authService services.IAuthService) web.IHandler {
@@ -58,13 +50,13 @@ func (h *loginHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	if err := utils.SetRequestDto(r, requestDto); err != nil {
-		responseDto.setError(err, http.StatusBadRequest)
+		responseDto.SetError(err, http.StatusBadRequest)
 		return
 	}
 
 	if len(requestDto.Username) == 0 || len(requestDto.Password) == 0 {
 		// TODO: add mistakes types
-		responseDto.setError(fmt.Errorf("invalid username of password"), http.StatusBadRequest)
+		responseDto.SetError(fmt.Errorf("invalid username of password"), http.StatusBadRequest)
 		return
 	}
 
@@ -72,36 +64,36 @@ func (h *loginHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		targetErr := sql.ErrNoRows
 		if errors.Is(err, targetErr) {
-			responseDto.setError(err, http.StatusNotFound)
+			responseDto.SetError(err, http.StatusNotFound)
 			return
 		}
 
-		responseDto.setError(err, http.StatusInternalServerError)
+		responseDto.SetError(err, http.StatusInternalServerError)
 		return
 	}
 
 	if account.HashedPassword != utils.GetPasswordHash(requestDto.Password) {
 		// TODO: add mistakes types
-		responseDto.setError(fmt.Errorf("incorrect password"), http.StatusBadRequest)
+		responseDto.SetError(fmt.Errorf("incorrect password"), http.StatusBadRequest)
 		return
 	}
 
 	accessToken, err := h.authService.GenerateAccessToken(r.Context(), requestDto.Username)
 	if err != nil {
-		responseDto.setError(err, http.StatusInternalServerError)
+		responseDto.SetError(err, http.StatusInternalServerError)
 		return
 	}
 
 	refreshToken, err := h.authService.GenerateRefreshToken(r.Context(), int64(account.Id), requestDto.Fingerprint)
 	if err != nil {
-		responseDto.setError(err, http.StatusInternalServerError)
+		responseDto.SetError(err, http.StatusInternalServerError)
 		return
 	}
 
 	responseDto.AccessToken = accessToken
 	responseDto.RefreshToken = refreshToken
 	responseDto.AccountId = account.Id
-	responseDto.setError(nil, http.StatusOK)
+	responseDto.SetError(nil, http.StatusOK)
 }
 
 func (h *loginHandler) GetMethod() string {

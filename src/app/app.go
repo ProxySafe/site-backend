@@ -9,6 +9,8 @@ import (
 	"github.com/ProxySafe/site-backend/src/app/resources"
 	"github.com/ProxySafe/site-backend/src/app/services"
 	"github.com/ProxySafe/site-backend/src/http_handlers/auth"
+	"github.com/ProxySafe/site-backend/src/http_handlers/profile"
+	"github.com/ProxySafe/site-backend/src/http_handlers/store"
 	"github.com/ProxySafe/site-backend/src/modules/web"
 	"github.com/gorilla/mux"
 )
@@ -37,7 +39,19 @@ func (a *App) initWebServer(httpHandlers []web.IHandler) {
 func (a *App) initHttpHandlers() []web.IHandler {
 	var handlers []web.IHandler
 
-	handlers = append(handlers, auth.NewHandlers(a.services.AccountService, a.services.AuthService)...)
+	handlers = append(handlers, auth.NewHandlers(
+		a.services.AccountService,
+		a.services.AuthService,
+	)...)
+	handlers = append(handlers, profile.NewHandlers(
+		a.services.ProxyService,
+		a.services.AuthService,
+	)...)
+	handlers = append(handlers, store.NewHandlers(
+		a.services.ProxyService,
+		a.services.OrderService,
+		a.services.AuthService,
+	)...)
 	return handlers
 }
 

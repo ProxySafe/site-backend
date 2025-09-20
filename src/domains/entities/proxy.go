@@ -9,7 +9,7 @@ type Proxy struct {
 	Addr           string     `db:"addr" json:"addr"`
 	Enabled        uint8      `db:"enabled" json:"enabled"`
 	TcpFingerprint string     `db:"tcp_fingerprint" json:"tcp_fingerprint"`
-	Country        string     `db:"country" json:"country"`
+	Country        *string    `db:"country" json:"country"`
 	ServerName     string     `db:"server_name" json:"server_name"`
 	IsBusy         uint8      `db:"is_busy" json:"is_busy"`
 	OrderId        *int64     `db:"order_id" json:"order_id"`
@@ -42,4 +42,22 @@ type ProtocolProxy struct {
 type CountryProxy struct {
 	IdWithProxyId
 	Country string `db:"country" json:"country"`
+}
+
+type Proxies []Proxy
+
+func (ps Proxies) GetAddrs() []string {
+	addrs := make([]string, 0, len(ps))
+	for _, p := range ps {
+		addrs = append(addrs, p.Addr)
+	}
+	return addrs
+}
+
+func (ps Proxies) GetIds() []int {
+	ids := make([]int, 0, len(ps))
+	for _, p := range ps {
+		ids = append(ids, p.Id)
+	}
+	return ids
 }

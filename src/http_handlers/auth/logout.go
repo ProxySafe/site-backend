@@ -22,15 +22,7 @@ type logoutRequestDto struct {
 }
 
 type logoutResponseDto struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-}
-
-func (r *logoutResponseDto) setError(err error, status int) {
-	if err != nil {
-		r.Message = err.Error()
-	}
-	r.Status = status
+	common.StandardResponse
 }
 
 func newLogoutHandler(authService services.IAuthService) web.IHandler {
@@ -50,14 +42,14 @@ func (h *logoutHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	if err := utils.SetRequestDto(r, req); err != nil {
-		resp.setError(err, http.StatusBadRequest)
+		resp.SetError(err, http.StatusBadRequest)
 		return
 	}
 
 	if err := h.authService.RemoveRefreshToken(r.Context(), req.AccessToken, &req.Fingerprint); err != nil {
-		resp.setError(err, http.StatusUnauthorized)
+		resp.SetError(err, http.StatusUnauthorized)
 	}
-	resp.setError(nil, http.StatusOK)
+	resp.SetError(nil, http.StatusOK)
 }
 
 func (h *logoutHandler) GetMethod() string {

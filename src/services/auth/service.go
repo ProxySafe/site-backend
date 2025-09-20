@@ -26,12 +26,13 @@ func NewService(
 	return &service{
 		signingKey: signingKey,
 		repo:       repo,
+		tokenTTL:   tokenTTL,
 	}
 }
 
 func (s *service) GenerateAccessToken(ctx context.Context, userName string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Duration(s.tokenTTL)).Unix(),
+		ExpiresAt: time.Now().Add(time.Duration(s.tokenTTL * int64(time.Minute))).Unix(),
 		Subject:   userName,
 	})
 
